@@ -1,9 +1,13 @@
 import { DatabaseSync } from "node:sqlite";
 import { mkdirSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { hashPassword } from "./password";
 
-const dataDir = path.join(process.cwd(), "data");
+const isServerless = process.env.VERCEL === "1";
+const dataDir = isServerless
+  ? path.join(tmpdir(), "natis-data")
+  : path.join(process.cwd(), "data");
 mkdirSync(dataDir, { recursive: true });
 
 const dbPath = path.join(dataDir, "natis.db");
